@@ -1,9 +1,36 @@
-var Cat = function(data) {
-	this.clickCount = ko.observable(0);
-	this.name = ko.observable('Tabby');
-	this.imgSrc = ko.observable('img/cat.jpg');
+var initialcats = [
+	{
+		clickCount : 0,
+		name: 'Ana',
+		imgSrc: 'img/cat.jpg',
+		nickname: ['Bana']
+	},
+	{
+		clickCount : 0,
+		name: 'Tanya',
+		imgSrc: 'img/cat2.jpg',
+		nickname: ['Tatty']
+	},
+	{
+		clickCount : 0,
+		name: 'Victoria',
+		imgSrc: 'img/cat3.jpg',
+		nickname: ['Vico']
+	},
+	{
+		clickCount : 0,
+		name: 'Ophelia',
+		imgSrc: 'img/cat4.jpg',
+		nickname: ['Oph']
+	}
+]
 
-	this.nickname = ko.observableArray(['Tab', 'Tobes', 'Tabu', 'Tootsie', 'Toker']);
+
+var Cat = function(data) {
+	this.clickCount = ko.observable(data.clickCount);
+	this.name = ko.observable(data.name);
+	this.imgSrc = ko.observable(data.imgSrc);
+	this.nickname = ko.observableArray(data.nickname);
 
 	this.title = ko.computed(function() {
 		var title;
@@ -25,21 +52,29 @@ var Cat = function(data) {
 		}
 		return title;
 	}, this);
-}
+};
 
 var ViewModel = function() {
+
+	var self = this;
+
+	this.catList = ko.observableArray([]);
+
+	initialcats.forEach(function(catItem){
+		self.catList.push( new Cat(catItem) );
+
+	});
 	
-	this.currentCat = ko.observable( new Cat({
-		clickCount: 0,
-		name: 'Tabby',
-		imgSrc: 'img/cat.jpg',
-		nicknames: []
-	}) );
+	this.currentCat = ko.observable( this.catList()[0] );
 
 	this.incrementCounter = function() {
-		this.clickCount(this.clickCount() + 1);
-	}
-}
+		self.currentCat().clickCount(self.currentCat().clickCount() + 1);
+	};
+
+	this.setCat = function(clickedCat) {
+		self.currentCat(clickedCat);
+	};
+};
 
 
 
